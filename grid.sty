@@ -1,0 +1,103 @@
+%% COLORS
+%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+%SCW colors
+\definecolor{scw-blue-black}{HTML}{000017}
+\definecolor{scw-charcoal}{HTML}{2b2b36}
+\definecolor{scw-orange}{HTML}{f79200}
+\definecolor{scw-yellow}{HTML}{ffbe12}
+\definecolor{scw-white}{HTML}{ffffff}
+\definecolor{scw-ivory}{HTML}{ebebe4}
+\definecolor{scw-red}{HTML}{e2533d}
+\definecolor{scw-sky}{HTML}{90d4db}
+\definecolor{scw-teal}{HTML}{15bbb9}
+
+\color{scw-blue-black}
+
+\setbeamercolor{background canvas}{bg=scw-white}
+\setbeamercolor{normal text}{fg=scw-charcoal!80}
+\setbeamercolor{alerted text}{fg=scw-orange}
+\setbeamercolor{example text}{fg=scw-red}
+\setbeamercolor{structure}{fg=scw-blue-black}
+\setbeamercolor{frametitle}{fg=scw-blue-black}
+
+% HIDE NAV BAR
+\setbeamertemplate{navigation symbols}{}
+
+% PROGRESS SLIDE
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+
+%% FONTS
+% Can't get custom fonts to load, Arial is substitute system font
+\usepackage{lmodern}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% PLOTS AND DRAWINGS 
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows,shapes,backgrounds}
+\usetikzlibrary{positioning,arrows.meta,quotes}
+
+% TO FACILITATE POSITIONING
+\usepackage{ifthen}
+\usepackage{xparse}
+\usetikzlibrary{intersections,through}
+\usepackage{pgfpages}
+
+\newcommand{\drawlabels}{
+        \foreach \x in {0,...,9} {
+            \pgfmathparse{1+\x}
+            \pgfmathresult \let\xloc\pgfmathresult;
+            \node[right] at (0,\xloc/10*\paperheight) {\xloc};%
+        }
+        \foreach \y in {0,...,9} {
+            \pgfmathparse{1+\y}
+            \pgfmathresult \let\yloc\pgfmathresult;
+            \node at (\yloc/10*\paperwidth,0.05*\paperheight) {\yloc};%
+        }
+}
+      
+
+\newif\ifHelpLines
+\newcommand*\MyPlacedStuff{}
+\setbeamertemplate{background}{%>>>
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle(\paperwidth,\paperheight);
+    \ifHelpLines
+      \draw[help lines, xstep=0.1*\paperwidth, ystep=0.1*\paperheight] (0,0) grid (\paperwidth,\paperheight);
+      \drawlabels
+    \fi
+    \MyPlacedStuff
+  \end{tikzpicture}\gdef\MyPlacedStuff{}}
+
+\NewDocumentCommand{\PlaceAt}{ >{\SplitArgument{1}{,}}r() O{} +m }
+  {%
+    \PlaceAtB#1{#2}{#3}%
+  }
+\NewDocumentCommand{\PlaceAtB}{ m m m +m }
+  {%
+    \xdef\MyPlacedStuff%
+      {%
+        \unexpanded\expandafter{\MyPlacedStuff
+          \node[#3] at (#1\paperwidth,#2\paperheight) {#4};%
+        }%
+      }%
+  }
+\newcommand{\AddToPlaced}[1]
+  {%
+    \xdef\MyPlacedStuff%
+      {%
+        \unexpanded\expandafter{\MyPlacedStuff#1}%
+      }%
+  }
+
